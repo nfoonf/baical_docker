@@ -1,0 +1,32 @@
+version: '2'
+volumes:
+  baikaldata: {}
+  certdata: {}
+services:
+  baikal:
+    image: bambucha/baikal
+    volumes:
+      - baikaldata:/baikal/Specific
+    expose:
+      - "80"
+
+  haproxy:
+    build: docker-haproxy/
+    volumes:
+      - certdata:/etc/letsencrypt/live
+    expose:
+      - "443"
+    ports:
+      - "0.0.0.0:443:443"
+    links:
+      - baikal
+
+  simp_le:
+    image: m3adow/letsencrypt-simp_le
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    volumes:
+      - certdata:/certs
+    command:  "-f account_key.json  -f chain.pem -f cert.pem -f key.pem --email bayer@nfoonf.org -d nfoonf.org"
