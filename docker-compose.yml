@@ -17,10 +17,9 @@ services:
     expose:
       - "443"
     ports:
-      - "0.0.0.0:443:443"
+      - "0.0.0.0:8080:443"
     links:
       - baikal
-
   simp_le:
     image: m3adow/letsencrypt-simp_le
     expose:
