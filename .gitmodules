@@ -4,3 +4,6 @@
 [submodule "docker-baikal"]
 	path = docker-baikal
 	url = https://github.com/nfoonf/docker-baikal.git
+[submodule "docker-backup-to-s3"]
+	path = docker-backup-to-s3
+	url = https://github.com/nfoonf/docker-backup-to-s3.git
