@@ -3,16 +3,16 @@ volumes:
   baikaldata: {}
   certdata: {}
 services:
-  docker_s3_backup:
-    build: docker-backup-to-s3
-    env_file:
-      - ./s3_backup.env
-    volumes:
-      - baikaldata:/data/baikal
-    depends_on:
-      - baikal
+#  #docker_s3_backup:
+#    build: docker-backup-to-s3
+#    env_file:
+#      - ./s3_backup.env
+#    volumes:
+#      - baikaldata:/data/baikal
+#    depends_on:
+#      - baikal
   baikal:
-    image: bambucha/baikal
+    build: docker-baikal
     volumes:
       - baikaldata:/baikal/Specific
     expose:
@@ -24,20 +24,20 @@ services:
       - certdata:/etc/letsencrypt/live
     expose:
       - "443"
+      - "444"
     ports:
       - "0.0.0.0:8080:443"
+      - "0.0.0.0:8081:444"
     links:
       - baikal
-    depends_on:
-      - simp_le
     restart: always
-  simp_le:
-    image: m3adow/letsencrypt-simp_le
-    expose:
-      - "80"
-    ports:
-      - "80:80"
-    # restart: always
-    volumes:
-      - certdata:/certs
-    command:  '-f account_key.json  -f full.pem --email bayer@nfoonf.org -d nfoonf.org'
+  #simp_le:
+  #  image: m3adow/letsencrypt-simp_le
+  #  expose:
+  #    - "80"
+  #  ports:
+  #    - "80:80"
+  #  # restart: always
+  #  volumes:
+  #    - certdata:/certs
+  #  command:  '-f account_key.json  -f full.pem --email bayer@nfoonf.org -d nfoonf.org'
