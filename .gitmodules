@@ -1,6 +1,3 @@
-[submodule "docker-haproxy"]
-	path = docker-haproxy
-	url = https://github.com/nfoonf/docker-haproxy.git
 [submodule "docker-baikal"]
 	path = docker-baikal
 	url = https://github.com/nfoonf/docker-baikal.git

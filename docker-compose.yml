@@ -1,43 +1,29 @@
 version: '2'
-volumes:
-  baikaldata: {}
-  certdata: {}
+
 services:
-#  #docker_s3_backup:
-#    build: docker-backup-to-s3
-#    env_file:
-#      - ./s3_backup.env
-#    volumes:
-#      - baikaldata:/data/baikal
-#    depends_on:
-#      - baikal
   baikal:
     build: docker-baikal
     volumes:
-      - baikaldata:/baikal/Specific
+      - ./baikaldata:/baikal/Specific
     expose:
       - "80"
     restart: always
-  haproxy:
-    build: docker-haproxy/
-    volumes:
-      - certdata:/etc/letsencrypt/live
-    expose:
-      - "443"
-      - "444"
+  bamboo-redirect:
+    image: geldim/https-redirect
     ports:
-      - "0.0.0.0:8080:443"
-      - "0.0.0.0:8081:444"
-    links:
-      - baikal
-    restart: always
-  #simp_le:
-  #  image: m3adow/letsencrypt-simp_le
-  #  expose:
-  #    - "80"
-  #  ports:
-  #    - "80:80"
-  #  # restart: always
-  #  volumes:
-  #    - certdata:/certs
-  #  command:  '-f account_key.json  -f full.pem --email bayer@nfoonf.org -d nfoonf.org'
+      - "80:80"
+  ssl-proxy:
+    image: fsouza/docker-ssl-proxy
+    environment:
+      DOMAIN: nfoonf.org 
+      TARGET_PORT: 80
+      TARGET_HOST: baikal
+      CLIENT_MAX_BODY_SIZE:
+    # put valid certs and keys here
+    volumes:
+      - ./certdata:/etc/nginx/certs
+    ports:
+      - "8080:443"
+      - "443:443"
+
+
